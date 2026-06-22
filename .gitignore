@@ -1,0 +1,49 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# ---- Virtual env ----
+venv/
+.venv/
+env/
+.env
+
+# ---- Dataset & landmark (berat) ----
+data/raw/
+data/landmarks/
+data/processed/
+*.mp4
+*.avi
+*.npy
+*.npz
+
+# ---- Model artefak ----
+models/*.h5
+models/*.keras
+models/*.tflite
+models/*.pb
+
+# ---- Audio gTTS sementara ----
+*.mp3
+src/web/static/audio/
+
+# ---- IDE / editor ----
+.vscode/
+.idea/
+*.swp
+
+# ---- OS ----
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# ---- Notebook checkpoints ----
+.ipynb_checkpoints/
+
+# ---- AI Agents ----
+.claude/
+.agent/

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Penerjemah BISINDO Real-time</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+  <header>
+    <h1>Penerjemah Bahasa Isyarat Indonesia (BISINDO)</h1>
+    <p class="subtitle">Real-time · MediaPipe + LSTM + NLP rule-based</p>
+  </header>
+
+  <main>
+    <!-- ===== Kiri: Video ===== -->
+    <section class="video-panel card">
+      <div class="video-wrap">
+        <img id="video" alt="Stream webcam" />
+        <div id="video-placeholder" class="placeholder">
+          <strong>Kamera Belum Aktif.</strong>
+        </div>
+      </div>
+      <div class="controls">
+        <button id="btn-start" class="btn btn-primary">▶ Mulai Kamera</button>
+        <button id="btn-reset" class="btn btn-secondary">⟳ Reset Model</button>
+      </div>
+    </section>
+
+    <!-- ===== Kanan: Panel ===== -->
+    <aside class="panels">
+      <!-- Deteksi LSTM -->
+      <section class="card">
+        <h2>Deteksi Gerakan (LSTM)</h2>
+        <div class="detect-row">
+          <span id="raw-word" class="raw-word" aria-live="polite">—</span>
+          <span id="raw-score" class="badge">0.00</span>
+        </div>
+      </section>
+
+      <!-- Kalimat NLP -->
+      <section class="card">
+        <h2>Terjemahan Kalimat (NLP)</h2>
+        <p id="sentence" class="sentence" aria-live="polite">—</p>
+      </section>
+
+      <!-- Kontrol Audio -->
+      <section class="card">
+        <h2>Kontrol Audio (gTTS)</h2>
+        <label class="toggle">
+          <input type="checkbox" id="autoplay" />
+          <span>Auto-play saat kalimat berubah</span>
+        </label>
+        <div class="controls">
+          <button id="btn-replay" class="btn btn-primary">🔊 Putar Ulang</button>
+        </div>
+        <audio id="player" controls></audio>
+        <p id="audio-status" class="status"></p>
+      </section>
+    </aside>
+
+    <!-- ===== Panel Suara → Teks (Web Speech API, murni frontend) ===== -->
+    <section id="speech-panel" class="card speech-panel">
+      <h2>Komunikasi Suara → Teks</h2>
+      <p class="subtitle speech-note">
+        Mengubah suara menjadi teks untuk dibaca pengguna tunarungu — bukan menerjemahkan
+        suara ke isyarat. Butuh koneksi internet; paling andal di Google Chrome.
+      </p>
+      <div class="controls">
+        <button id="speech-toggle" class="btn btn-primary">🎤 Mulai Bicara</button>
+        <button id="speech-clear" class="btn btn-secondary">🧹 Bersihkan</button>
+      </div>
+      <p id="speech-status" class="status">Berhenti.</p>
+      <div id="speech-transcript" class="speech-transcript" aria-live="polite">
+        <span id="speech-final"></span>
+        <span id="speech-interim" class="speech-interim"></span>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <small>Tugas Akhir D-III Teknik Informatika · BISINDO Word Gesture Recognition</small>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/speech.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+# ==========================================================================
+# BISINDO Real-time Translator — dependencies (Python 3.10+)
+# ==========================================================================
+# Training LSTM dilakukan TERPISAH di Colab/Kaggle.
+# File ini untuk environment LOKAL (preprocessing + inference + web).
+# ==========================================================================
+
+# --- Web / UI ---
+Flask==3.0.3
+
+# --- Computer Vision / Landmark ---
+opencv-python==4.10.0.84
+mediapipe==0.10.21
+numpy==1.26.4
+# WAJIB: mediapipe butuh protobuf <5. protobuf 5.x bikin Holistic gagal init
+# (RuntimeError: Failed to parse ... Expected identifier, got: \).
+protobuf>=4.25.3,<5
+
+# --- Inference model (LOKAL) ---
+# Laptop RTX 2050: bisa tensorflow GPU build, atau CPU untuk inference ringan.
+tensorflow==2.15.0
+
+# --- YOLO ROI (opsional, Tahap B; hanya perlu bila config.USE_YOLO_ROI=True) ---
+# Deteksi tangan + cropping SEBELUM MediaPipe. ultralytics menarik torch.
+# PENTING: jaga numpy<2 (TF 2.15 + MediaPipe). Install agar numpy 1.26.4 tak ter-bump:
+#   pip install "numpy<2"
+#   pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+#   pip install ultralytics
+# Verifikasi sesudahnya: python -c "import numpy,tensorflow,torch; \
+#   print(numpy.__version__, torch.__version__, torch.cuda.is_available())"
+#   -> numpy HARUS tetap 1.26.4. Bila ter-bump ke 2.x, rollback (jangan commit).
+# torch CUDA lepas dari TF (TF tetap CPU). Tanpa GPU, kode auto-fallback ke CPU.
+ultralytics==8.3.0
+
+# --- Text-to-Speech ---
+gTTS==2.5.1
+
+# --- Utilities ---
+tqdm==4.66.4
+python-dotenv==1.0.1
+
+# ==========================================================================
+# TRAINING-ONLY (umumnya sudah ada di Colab/Kaggle; uncomment bila perlu lokal)
+# ==========================================================================
+# scikit-learn==1.4.2     # train/test split, classification_report, confusion matrix
+# matplotlib==3.8.4       # plot kurva loss/akurasi
