@@ -21,7 +21,7 @@ Alur per frame (komponen **opsional** ditandai — default OFF):
         ▼
  [2] YOLOv8 Hand Detection ──→ crop ROI        (OPSIONAL)
      └─ USE_YOLO_ROI = False (default)             ┊ skip bila off
-        │ ◄───────────────────────────────────────┘
+        │ ◄────────────────────────────────────────┘
         ▼
  [3] MediaPipe Landmark Extraction
      ├─ TANGAN saja: 2 × 21 titik × (x,y,z) = 126 fitur
