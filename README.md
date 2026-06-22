@@ -75,7 +75,7 @@ Alur per frame (komponen **opsional** ditandai — default OFF):
 ## Struktur Folder
 
 ```
-project_08/
+BISINDO_Project/
 ├── config.py            # SEMUA parameter terpusat (frame, threshold, flag, path, label)
 ├── app.py               # entry point Flask
 ├── requirements.txt
