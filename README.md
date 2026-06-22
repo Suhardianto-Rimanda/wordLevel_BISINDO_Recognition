@@ -15,18 +15,45 @@ kalimat dengan aturan sederhana (rule-based). Ini **bukan** klasifikasi kalimat 
 Alur per frame (komponen **opsional** ditandai — default OFF):
 
 ```
-1. Webcam capture frame (OpenCV, 640x480)
-2. [OPSIONAL] YOLOv8 deteksi tangan → crop ROI          (USE_YOLO_ROI, default False)
-3. MediaPipe → landmark TANGAN saja: 2 tangan x 21 titik x (x,y,z) = 126 fitur
-   - default "holistic"; [OPSIONAL] "hands" (lebih ringan)  (FEATURE_EXTRACTOR)
-   - pose & wajah TIDAK dipakai
-4. FrameBuffer 30 frame → normalisasi (wrist-relative + scale, sama seperti training)
-5. LSTM → label KATA + skor; di bawah PROBABILITY_THRESHOLD dianggap noise
-6. NLP rule-based → smoothing (commit bila stabil) + dedup beruntun + rakit kalimat
-   - finalisasi otomatis saat idle IDLE_RESET_SECONDS → kalimat dikosongkan utk kalimat baru
-   - batas MAX_WORDS mencegah kalimat menumpuk tak terbatas
-7. gTTS → audio (bahasa Indonesia), diputar SEKALI saat kalimat difinalisasi
-8. Flask web UI → video ber-anotasi + panel teks + kontrol audio
+ [1] Webcam Capture
+     └─ OpenCV · frame 640×480
+        │
+        ▼
+ [2] YOLOv8 Hand Detection ──→ crop ROI        (OPSIONAL)
+     └─ USE_YOLO_ROI = False (default)             ┊ skip bila off
+        │ ◄───────────────────────────────────────┘
+        ▼
+ [3] MediaPipe Landmark Extraction
+     ├─ TANGAN saja: 2 × 21 titik × (x,y,z) = 126 fitur
+     ├─ FEATURE_EXTRACTOR: "holistic" (default) / "hands" (ringan)
+     └─ pose & wajah TIDAK dipakai
+        │
+        ▼
+ [4] FrameBuffer (30 frame)
+     └─ normalisasi: wrist-relative + scale  (sama spt training)
+        │
+        ▼
+ [5] LSTM Inference
+     ├─ output: label KATA + skor
+     └─ skor < PROBABILITY_THRESHOLD → dibuang sbg noise
+        │
+        ▼
+ [6] NLP Rule-based Assembly
+     ├─ smoothing  → commit kata bila stabil
+     ├─ dedup beruntun
+     ├─ rakit kalimat
+     ├─ auto-finalize saat idle ≥ IDLE_RESET_SECONDS → reset kalimat
+     └─ MAX_WORDS → batasi panjang kalimat
+        │
+        ├──────────────────────────┐
+        ▼                          ▼
+ [7] gTTS                    [8] Flask Web UI
+     └─ audio (id-ID)            ├─ video ber-anotasi
+        diputar SEKALI saat      ├─ panel teks
+        kalimat difinalisasi     └─ kontrol audio
+        │                          ▲
+        └──────────────────────────┘
+           audio dikontrol via UI
 ```
 
 **YOLO di sini hanya deteksi + cropping, bukan klasifikasi** — pengenalan kata tetap LSTM.
