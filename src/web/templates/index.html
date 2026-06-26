@@ -4,76 +4,267 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Penerjemah BISINDO Real-time</title>
+
+  <!-- Font display + body (fallback ke system-ui bila offline) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
 </head>
 <body>
-  <header>
-    <h1>Penerjemah Bahasa Isyarat Indonesia (BISINDO)</h1>
-    <p class="subtitle">Real-time · MediaPipe + LSTM + NLP rule-based</p>
-  </header>
+  <!-- ===================== NAVBAR ===================== -->
+  <nav class="navbar">
+    <a class="brand" href="#landing" data-goto="landing">
+      <span class="brand-mark" aria-hidden="true">✋</span>
+      <span class="brand-text">BISINDO<span class="brand-dot">.</span>live</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#landing"    data-goto="landing"    class="nav-link">Beranda</a></li>
+      <li><a href="#translator" data-goto="translator" class="nav-link">Translator</a></li>
+      <li><a href="#about"      data-goto="about"      class="nav-link">Tentang</a></li>
+    </ul>
+  </nav>
 
   <main>
-    <!-- ===== Kiri: Video ===== -->
-    <section class="video-panel card">
-      <div class="video-wrap">
-        <img id="video" alt="Stream webcam" />
-        <div id="video-placeholder" class="placeholder">
-          <strong>Kamera Belum Aktif.</strong>
+    <!-- ===================== LANDING ===================== -->
+    <section id="page-landing" class="page" data-page="landing">
+      <div class="hero">
+        <div class="hero-copy">
+          <span class="eyebrow">Bahasa Isyarat Indonesia · Real-time</span>
+          <h1 class="hero-title">
+            Menerjemahkan isyarat <span class="grad">BISINDO</span> menjadi
+            kalimat &amp; suara.
+          </h1>
+          <p class="hero-sub">
+            Sistem mengenali gerakan isyarat dari webcam, menyusunnya menjadi kalimat,
+            lalu membacakannya. Dilengkapi panel suara&nbsp;→&nbsp;teks untuk membantu
+            komunikasi dua arah dengan pengguna tunarungu.
+          </p>
+          <div class="hero-cta">
+            <button class="btn btn-primary btn-lg" data-goto="translator">
+              Buka Translator →
+            </button>
+            <button class="btn btn-ghost btn-lg" data-goto="about">
+              Cara kerja
+            </button>
+          </div>
+          <p class="hero-note">
+            Catatan jujur: panel suara mengubah <em>suara → teks</em>, bukan suara → isyarat.
+          </p>
+        </div>
+
+        <div class="hero-art" aria-hidden="true">
+          <div class="orb orb-1"></div>
+          <div class="orb orb-2"></div>
+          <div class="hero-card">
+            <div class="hc-row"><span class="hc-dot"></span> Deteksi gerakan</div>
+            <div class="hc-word">SELAMAT</div>
+            <div class="hc-bar"><i style="width:86%"></i></div>
+            <div class="hc-sentence">"selamat pagi semua"</div>
+            <div class="hc-tags"><span>MediaPipe</span><span>LSTM</span><span>NLP</span><span>gTTS</span></div>
+          </div>
         </div>
       </div>
-      <div class="controls">
-        <button id="btn-start" class="btn btn-primary">▶ Mulai Kamera</button>
-        <button id="btn-reset" class="btn btn-secondary">⟳ Reset Model</button>
+
+      <!-- Alur kerja -->
+      <div class="section-head">
+        <h2>Bagaimana sistem bekerja</h2>
+        <p>Empat tahap, dari kamera sampai suara.</p>
+      </div>
+      <ol class="pipeline">
+        <li class="pipe-step">
+          <span class="pipe-num">01</span>
+          <h3>MediaPipe</h3>
+          <p>Mendeteksi titik tangan &amp; tubuh (landmark) dari setiap frame webcam.</p>
+        </li>
+        <li class="pipe-step">
+          <span class="pipe-num">02</span>
+          <h3>LSTM</h3>
+          <p>Model mengenali kata isyarat dari urutan gerakan beserta skor keyakinan.</p>
+        </li>
+        <li class="pipe-step">
+          <span class="pipe-num">03</span>
+          <h3>NLP</h3>
+          <p>Kata-kata yang stabil dirangkai menjadi kalimat yang lebih natural.</p>
+        </li>
+        <li class="pipe-step">
+          <span class="pipe-num">04</span>
+          <h3>gTTS</h3>
+          <p>Kalimat final dibacakan sebagai audio agar bisa didengar lawan bicara.</p>
+        </li>
+      </ol>
+
+      <!-- Fitur -->
+      <div class="features">
+        <article class="feature card">
+          <div class="feat-ic">🎥</div>
+          <h3>Deteksi real-time</h3>
+          <p>Webcam langsung diproses dengan indikator FPS &amp; status kamera.</p>
+        </article>
+        <article class="feature card">
+          <div class="feat-ic">💬</div>
+          <h3>Suara → Teks</h3>
+          <p>Ucapan lawan bicara muncul sebagai gelembung chat yang mudah dibaca.</p>
+        </article>
+        <article class="feature card">
+          <div class="feat-ic">🗂️</div>
+          <h3>Riwayat kalimat</h3>
+          <p>Kalimat yang telah difinalisasi tersimpan selama sesi berlangsung.</p>
+        </article>
       </div>
     </section>
 
-    <!-- ===== Kanan: Panel ===== -->
-    <aside class="panels">
-      <!-- Deteksi LSTM -->
-      <section class="card">
-        <h2>Deteksi Gerakan (LSTM)</h2>
-        <div class="detect-row">
-          <span id="raw-word" class="raw-word" aria-live="polite">—</span>
-          <span id="raw-score" class="badge">0.00</span>
-        </div>
-      </section>
-
-      <!-- Kalimat NLP -->
-      <section class="card">
-        <h2>Terjemahan Kalimat (NLP)</h2>
-        <p id="sentence" class="sentence" aria-live="polite">—</p>
-      </section>
-
-      <!-- Kontrol Audio -->
-      <section class="card">
-        <h2>Kontrol Audio (gTTS)</h2>
-        <label class="toggle">
-          <input type="checkbox" id="autoplay" />
-          <span>Auto-play saat kalimat berubah</span>
-        </label>
-        <div class="controls">
-          <button id="btn-replay" class="btn btn-primary">🔊 Putar Ulang</button>
-        </div>
-        <audio id="player" controls></audio>
-        <p id="audio-status" class="status"></p>
-      </section>
-    </aside>
-
-    <!-- ===== Panel Suara → Teks (Web Speech API, murni frontend) ===== -->
-    <section id="speech-panel" class="card speech-panel">
-      <h2>Komunikasi Suara → Teks</h2>
-      <p class="subtitle speech-note">
-        Mengubah suara menjadi teks untuk dibaca pengguna tunarungu — bukan menerjemahkan
-        suara ke isyarat. Butuh koneksi internet; paling andal di Google Chrome.
-      </p>
-      <div class="controls">
-        <button id="speech-toggle" class="btn btn-primary">🎤 Mulai Bicara</button>
-        <button id="speech-clear" class="btn btn-secondary">🧹 Bersihkan</button>
+    <!-- ===================== TRANSLATOR ===================== -->
+    <section id="page-translator" class="page" data-page="translator" hidden>
+      <div class="page-head">
+        <h2>Translator</h2>
+        <p class="subtitle">Real-time · MediaPipe + LSTM + NLP rule-based + gTTS</p>
       </div>
-      <p id="speech-status" class="status">Berhenti.</p>
-      <div id="speech-transcript" class="speech-transcript" aria-live="polite">
-        <span id="speech-final"></span>
-        <span id="speech-interim" class="speech-interim"></span>
+
+      <div class="translator-grid">
+        <!-- ---------- KIRI: Speech (suara → teks) ---------- -->
+        <section id="speech-panel" class="card col-speech speech-panel">
+          <div class="panel-title">
+            <h2>Suara → Teks</h2>
+            <span class="tag-soft">Web Speech</span>
+          </div>
+          <p class="subtitle speech-note">
+            Mengubah suara menjadi teks untuk dibaca pengguna tunarungu — bukan menerjemahkan
+            suara ke isyarat. Butuh internet; paling andal di Google Chrome.
+          </p>
+          <div class="controls">
+            <button id="speech-toggle" class="btn btn-primary">🎤 Mulai Bicara</button>
+            <button id="speech-clear" class="btn btn-secondary">🧹 Bersihkan</button>
+          </div>
+          <p id="speech-status" class="status">Berhenti.</p>
+
+          <div class="chat-wrap">
+            <div id="speech-chat" class="speech-chat" aria-live="polite"></div>
+            <p id="speech-interim" class="speech-interim"></p>
+          </div>
+        </section>
+
+        <!-- ---------- TENGAH: Kamera (fokus) ---------- -->
+        <section class="card col-camera camera-panel">
+          <div class="panel-title">
+            <h2>Kamera</h2>
+            <div class="cam-meta">
+              <span id="cam-status" class="cam-status is-off">● Nonaktif</span>
+              <span id="fps-indicator" class="fps-chip">— FPS</span>
+            </div>
+          </div>
+
+          <div class="video-wrap">
+            <img id="video" alt="Stream webcam" />
+            <div id="video-placeholder" class="placeholder">
+              <div>
+                <div class="ph-ic" aria-hidden="true">📷</div>
+                <strong>Kamera belum aktif</strong>
+                <p>Tekan “Mulai Kamera” lalu izinkan akses kamera.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="controls">
+            <button id="btn-start" class="btn btn-primary">▶ Mulai Kamera</button>
+            <button id="btn-reset" class="btn btn-secondary">⟳ Reset Model</button>
+          </div>
+        </section>
+
+        <!-- ---------- KANAN: Output model ---------- -->
+        <aside class="col-output">
+          <!-- a. Deteksi LSTM -->
+          <section class="card">
+            <div class="panel-title"><h2>Deteksi Gerakan (LSTM)</h2></div>
+            <div class="detect-row">
+              <span id="raw-word" class="raw-word" aria-live="polite">—</span>
+              <span id="raw-score" class="badge">0.00</span>
+            </div>
+          </section>
+
+          <!-- b. Kalimat NLP -->
+          <section class="card">
+            <div class="panel-title"><h2>Terjemahan Kalimat (NLP)</h2></div>
+            <p id="sentence" class="sentence" aria-live="polite">—</p>
+          </section>
+
+          <!-- c. Riwayat NLP (memori sesi) -->
+          <section class="card">
+            <div class="panel-title">
+              <h2>Riwayat Kalimat</h2>
+              <span class="tag-soft">sesi ini</span>
+            </div>
+            <ul id="nlp-history" class="nlp-history">
+              <li class="history-empty">Belum ada kalimat yang difinalisasi.</li>
+            </ul>
+          </section>
+
+          <!-- d. Kontrol audio gTTS -->
+          <section class="card">
+            <div class="panel-title"><h2>Audio (gTTS)</h2></div>
+            <label class="toggle">
+              <input type="checkbox" id="autoplay" />
+              <span>Auto-play saat kalimat difinalisasi</span>
+            </label>
+            <div class="controls">
+              <button id="btn-replay" class="btn btn-primary">🔊 Putar Ulang</button>
+            </div>
+            <audio id="player" controls></audio>
+            <p id="audio-status" class="status"></p>
+          </section>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ===================== ABOUT ===================== -->
+    <section id="page-about" class="page" data-page="about" hidden>
+      <div class="page-head">
+        <h2>Tentang Project</h2>
+        <p class="subtitle">Penerjemah Bahasa Isyarat Indonesia (BISINDO) real-time.</p>
+      </div>
+
+      <div class="about-grid">
+        <article class="card about-main">
+          <h3>Apa ini?</h3>
+          <p>
+            Aplikasi web yang mengenali isyarat BISINDO dari webcam secara real-time,
+            menyusunnya menjadi kalimat, dan membacakannya sebagai suara. Tersedia pula
+            panel <strong>suara → teks</strong> agar percakapan dengan pengguna tunarungu
+            bisa berjalan dua arah. Dibangun sebagai Tugas Akhir D-III Teknik Informatika.
+          </p>
+
+          <h3>Teknologi</h3>
+          <ul class="tech-list">
+            <li><span>MediaPipe Holistic</span> ekstraksi landmark tangan &amp; tubuh</li>
+            <li><span>LSTM (PyTorch)</span> klasifikasi kata isyarat dari urutan gerakan</li>
+            <li><span>NLP rule-based</span> perangkaian kata menjadi kalimat</li>
+            <li><span>gTTS</span> sintesis suara dari kalimat</li>
+            <li><span>Web Speech API</span> suara → teks (murni di browser)</li>
+            <li><span>Flask</span> server + streaming MJPEG webcam</li>
+          </ul>
+        </article>
+
+        <article class="card about-guide">
+          <h3>Panduan pakai</h3>
+          <ol class="guide-steps">
+            <li><strong>Buka Translator</strong> dari menu di atas.</li>
+            <li><strong>Mulai Kamera</strong> lalu izinkan akses kamera di browser.</li>
+            <li><strong>Peragakan isyarat</strong> di depan kamera dengan pencahayaan cukup.</li>
+            <li><strong>Baca hasil</strong>: kata terdeteksi (LSTM) &amp; kalimat (NLP) di panel kanan.</li>
+            <li><strong>Dengarkan</strong>: aktifkan auto-play atau tekan “Putar Ulang”.</li>
+            <li><strong>Reset Model</strong> untuk mengosongkan kalimat dan mulai dari awal.</li>
+          </ol>
+
+          <h3>Panel suara → teks</h3>
+          <ol class="guide-steps">
+            <li>Tekan <strong>Mulai Bicara</strong> dan izinkan mikrofon.</li>
+            <li>Ucapan lawan bicara muncul sebagai <strong>gelembung chat</strong>.</li>
+            <li><strong>Bersihkan</strong> untuk mengosongkan riwayat percakapan.</li>
+          </ol>
+        </article>
       </div>
     </section>
   </main>
@@ -84,5 +275,6 @@
 
   <script src="{{ url_for('static', filename='js/app.js') }}"></script>
   <script src="{{ url_for('static', filename='js/speech.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/nav.js') }}"></script>
 </body>
 </html>

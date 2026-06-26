@@ -9,10 +9,12 @@ kata (40 folder), tiap folder berisi ~50 file `.mp4`.
 ```
 data/raw/
 ├── Apa/
-│   ├── BISINDO_Apa_001.mp4
+│   ├── Signer01_Apa_001.mp4
+│   └── Signer02_Apa_001.mp4
 │   └── ...
 ├── Apa Kabar/
-│   └── BISINDO_Apa Kabar_001.mp4
+│   └── Signer01_Apa Kabar_001.mp4
+│   └── Signer02_Apa Kabar_001.mp4
 │   └── ...
 └── ...   (40 kelas)
 ```

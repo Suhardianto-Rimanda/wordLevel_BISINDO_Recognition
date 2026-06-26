@@ -92,7 +92,7 @@ ENFORCE_MAX_WORDS = True   # toggle penegakan batas panjang kalimat
 # Toggle pengaman: False = baseline MediaPipe-only PERSIS seperti sekarang (YOLO
 # tak disentuh, ultralytics/torch tak perlu ter-install). True = YOLO crop ROI →
 # MediaPipe pada crop. YOLO HANYA deteksi+crop; klasifikasi tetap LSTM.
-USE_YOLO_ROI = False
+USE_YOLO_ROI = True
 YOLO_MODEL_PATH = MODELS_DIR / "yolo_hand.pt"  # bobot best.pt dari Tahap A (Colab)
 YOLO_DEVICE = "cuda"          # auto-fallback ke "cpu" bila GPU tak tersedia (TAK hardcode)
 YOLO_CONF = 0.25              # confidence threshold deteksi tangan

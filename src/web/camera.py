@@ -124,6 +124,7 @@ class VideoCamera:
             return {
                 "raw_word": self.raw_word,
                 "raw_score": round(float(self.raw_score), 3),
+                "fps": round(float(self._fps), 1),
                 # tampilkan kalimat berjalan; bila sudah difinalisasi (buffer kosong),
                 # tetap tampilkan kalimat final terakhir sampai kata baru muncul.
                 "sentence": live if live else self._final_sentence,

@@ -14,6 +14,7 @@ env/
 
 # ---- Dataset & landmark (berat) ----
 data/raw/
+data/backup/
 data/landmarks/
 data/processed/
 *.mp4
@@ -22,7 +23,6 @@ data/processed/
 *.npz
 
 # ---- Model artefak ----
-models/*.h5
 models/*.keras
 models/*.tflite
 models/*.pb

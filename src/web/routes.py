@@ -21,7 +21,7 @@ logger = get_logger(__name__)
 bp = Blueprint("main", __name__)
 
 _IDLE_STATE = {
-    "raw_word": None, "raw_score": 0.0, "sentence": "",
+    "raw_word": None, "raw_score": 0.0, "fps": 0.0, "sentence": "",
     "final_sentence": "", "final_id": 0, "model_loaded": False,
 }
 

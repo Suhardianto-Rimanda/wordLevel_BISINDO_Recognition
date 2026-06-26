@@ -7,8 +7,19 @@ document.addEventListener("DOMContentLoaded", () => {
   const toggle = document.getElementById("speech-toggle");
   const clearBtn = document.getElementById("speech-clear");
   const statusEl = document.getElementById("speech-status");
-  const finalEl = document.getElementById("speech-final");
+  const chatEl = document.getElementById("speech-chat"); // container gelembung chat
   const interimEl = document.getElementById("speech-interim");
+
+  // Tambah 1 hasil final sebagai gelembung chat (display saja).
+  function addBubble(text) {
+    const t = (text || "").trim();
+    if (!t) return;
+    const div = document.createElement("div");
+    div.className = "speech-bubble";
+    div.textContent = t;
+    chatEl.appendChild(div);
+    chatEl.scrollTop = chatEl.scrollHeight;
+  }
 
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
 
@@ -73,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const res = event.results[i];
         const txt = res[0].transcript;
         if (res.isFinal) {
-          finalEl.textContent = (finalEl.textContent + " " + txt).trim();
+          addBubble(txt); // tiap hasil final → gelembung chat berurutan
         } else {
           interim += txt;
         }
@@ -149,7 +160,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   clearBtn.addEventListener("click", () => {
-    finalEl.textContent = "";
+    chatEl.innerHTML = "";
     interimEl.textContent = "";
   });
 
