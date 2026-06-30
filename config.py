@@ -81,6 +81,13 @@ PROBABILITY_THRESHOLD = 0.7   # prediksi di bawah ini diabaikan
 SMOOTHING_WINDOW = 5          # jumlah prediksi terakhir untuk voting/smoothing
 PREDICTION_COOLDOWN = 15      # min. frame jeda sebelum kata sama dicatat ulang
 
+# --- Segmentasi isyarat untuk jalur UPLOAD VIDEO (multi-kata) ---------------- #
+# File-only: pisah video jadi per-isyarat lewat JEDA tangan (analog idle-reset
+# real-time). Tiap segmen aktif → resample 30 → 1 prediksi (konsisten training).
+# TIDAK memengaruhi pipeline real-time.
+SEGMENT_MIN_GAP_FRAMES = 6    # >= sekian frame tanpa tangan = batas antar isyarat
+SEGMENT_MIN_LEN_FRAMES = 10   # < sekian frame aktif = bukan isyarat (diabaikan)
+
 # --- State management kalimat (reset & anti-tumpuk) -------------------------- #
 IDLE_RESET_SECONDS = 2.5   # idle tanpa kata baru -> finalisasi kalimat & kosongkan buffer
 MAX_WORDS = 20             # batas kata per kalimat (cegah menumpuk tak terbatas)
@@ -148,3 +155,10 @@ TTS_OUTPUT_DIR = BASE_DIR / "src" / "web" / "static" / "audio"
 FLASK_HOST = "127.0.0.1"
 FLASK_PORT = 5000
 DEBUG = True
+
+# --------------------------------------------------------------------------- #
+# UPLOAD (fitur pengujian via file video — ADITIF, terpisah dari real-time)
+# --------------------------------------------------------------------------- #
+UPLOAD_ALLOWED_EXTS = {".mp4", ".avi", ".mov", ".mkv"}   # allowlist tipe video
+UPLOAD_MAX_BYTES = 50 * 1024 * 1024                      # 50 MB batas ukuran
+UPLOAD_TEMP_DIR = BASE_DIR / "tmp_uploads"               # file temp (dihapus tiap request)

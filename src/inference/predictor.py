@@ -132,3 +132,21 @@ class Predictor:
         prob = float(probs[idx])
         word = self.labels[idx] if idx < len(self.labels) else f"LABEL_{idx:02d}"
         return word, prob
+
+    def predict_topk(self, sequence, k=3):
+        """Array (SEQUENCE_LENGTH, FEATURE_DIM) → list[(kata, prob)] top-k (desc).
+
+        Satu forward pass dari softmax yang SAMA dengan ``predict``; ambil k indeks
+        probabilitas tertinggi. top-1 identik dengan ``predict`` (argmax). Tanpa
+        threshold (urusan pemanggil). Dipakai oleh fitur pengujian file video.
+        """
+        seq = np.asarray(sequence, dtype=np.float32)[None, ...]  # (1, 30, 126)
+        probs = self.model.predict(seq, verbose=0)[0]
+        k = max(1, min(int(k), int(probs.shape[0])))
+        top_idx = np.argsort(probs)[::-1][:k]
+        out = []
+        for i in top_idx:
+            i = int(i)
+            word = self.labels[i] if i < len(self.labels) else f"LABEL_{i:02d}"
+            out.append((word, float(probs[i])))
+        return out

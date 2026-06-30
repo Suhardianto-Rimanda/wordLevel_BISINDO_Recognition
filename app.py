@@ -23,6 +23,9 @@ def create_app():
     )
     # pastikan folder output audio gTTS ada
     config.TTS_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    # folder temp upload video (fitur pengujian file) + batas ukuran request
+    config.UPLOAD_TEMP_DIR.mkdir(parents=True, exist_ok=True)
+    app.config["MAX_CONTENT_LENGTH"] = config.UPLOAD_MAX_BYTES
 
     app.register_blueprint(bp)
 
