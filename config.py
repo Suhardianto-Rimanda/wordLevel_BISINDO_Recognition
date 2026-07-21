@@ -117,6 +117,11 @@ LEARNING_RATE = 1e-3
 TRAIN_TEST_SPLIT = 0.2   # DEPRECATED: tak dipakai. Lihat SPLIT_*_RATIO di bawah.
 RANDOM_SEED = 42
 
+# Varian arsitektur LSTM (lihat build_lstm_model di src/training/model.py):
+#   True  -> Bidirectional(LSTM(...)) — skema notebook train_bilstm_augmentasi
+#   False -> LSTM(...) biasa — baseline lama, tetap didukung utk pembanding
+USE_BIDIRECTIONAL_LSTM = True
+
 # --------------------------------------------------------------------------- #
 # SPLIT DATASET (level VIDEO, stratified per kelas)
 # --------------------------------------------------------------------------- #

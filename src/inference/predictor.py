@@ -57,9 +57,19 @@ def _load_weights_cross_version(model, path):
                     "tidak sinkron dengan saat training (cek build_lstm_model)."
                 )
             g = layers_grp[layer.name]
-            vars_grp = g["cell"]["vars"] if "cell" in g else g["vars"]  # RNN di cell/
-            for i in range(n):
-                flat.append(np.asarray(vars_grp[str(i)]))
+            if "forward_layer" in g and "backward_layer" in g:
+                # Bidirectional(LSTM(...)): tak ada cell/vars langsung di layer
+                # ini — bobot ada di dua sub-layer arah forward & backward,
+                # tiap satu RNN biasa (cell/vars). Urutan forward lalu backward
+                # sesuai urutan `layer.weights` bawaan Keras utk Bidirectional.
+                for sub in (g["forward_layer"], g["backward_layer"]):
+                    sub_vars = sub["cell"]["vars"] if "cell" in sub else sub["vars"]
+                    for i in range(len(sub_vars)):
+                        flat.append(np.asarray(sub_vars[str(i)]))
+            else:
+                vars_grp = g["cell"]["vars"] if "cell" in g else g["vars"]  # RNN di cell/
+                for i in range(n):
+                    flat.append(np.asarray(vars_grp[str(i)]))
         model.set_weights(flat)
 
 

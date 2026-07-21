@@ -33,19 +33,25 @@ def build_lstm_model(sequence_length=None, feature_dim=None, num_classes=None):
     """
     # import lokal: TensorFlow berat, hanya dibutuhkan saat build model aktif.
     from tensorflow.keras import Sequential
-    from tensorflow.keras.layers import Input, LSTM, Dropout, Dense
+    from tensorflow.keras.layers import Input, LSTM, Bidirectional, Dropout, Dense
     from tensorflow.keras.optimizers import Adam
 
     sequence_length = sequence_length or config.SEQUENCE_LENGTH   # 30
     feature_dim = feature_dim or config.FEATURE_DIM               # 126
     num_classes = num_classes or config.NUM_CLASSES               # 40
 
+    lstm_1 = LSTM(config.LSTM_UNITS, return_sequences=True,
+                  dropout=0.3, recurrent_dropout=0.2)       # 128
+    lstm_2 = LSTM(config.LSTM_UNITS // 2)                   # 64
+    if config.USE_BIDIRECTIONAL_LSTM:
+        lstm_1 = Bidirectional(lstm_1)
+        lstm_2 = Bidirectional(lstm_2)
+
     model = Sequential([
         Input(shape=(sequence_length, feature_dim)),
-        LSTM(config.LSTM_UNITS, return_sequences=True,
-             dropout=0.3, recurrent_dropout=0.2),          # 128
+        lstm_1,
         Dropout(0.4),
-        LSTM(config.LSTM_UNITS // 2),                       # 64
+        lstm_2,
         Dropout(0.4),
         Dense(config.LSTM_UNITS // 2, activation="relu"),  # 64
         Dropout(0.3),
