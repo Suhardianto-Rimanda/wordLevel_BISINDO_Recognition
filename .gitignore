@@ -46,4 +46,5 @@ desktop.ini
 
 # ---- AI Agents ----
 .claude/
+.codex/
 .agent/

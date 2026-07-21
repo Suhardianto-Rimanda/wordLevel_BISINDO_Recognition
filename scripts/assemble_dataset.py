@@ -24,6 +24,7 @@ Jalankan:
     python scripts/assemble_dataset.py --mode signer --trainval-signers Signer01 --test-signers Signer02
     python scripts/assemble_dataset.py --mode signer --trainval-signers Signer01,Signer02 \
         --test-signers Signer03 --val-ratio 0.2 --out-dir data/processed_signerindep
+    python scripts/assemble_dataset.py --mode custom
 
 Opsi:
     --mode {auto,signer}        Skenario pembagian (default: auto).
@@ -473,7 +474,7 @@ def main():
                              "melewati dialog interaktif (reproduksi).")
     args = parser.parse_args()
 
-    src_dir = Path(args.src_dir) if args.src_dir else (config.PROCESSED_DIR / "landmarks_persample")
+    src_dir = Path(args.src_dir) if args.src_dir else (config.PROCESSED_DIR / "landmarks_sample_custom")
     out_dir = Path(args.out_dir) if args.out_dir else config.PROCESSED_DIR
     seed = config.RANDOM_SEED if args.seed is None else args.seed
 
