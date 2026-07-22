@@ -148,6 +148,9 @@ main {
   margin-inline: auto;
   padding: clamp(1.5rem, 3vw, 3rem) clamp(1rem, 4vw, 48px);
 }
+/* Translator butuh ruang lebih lebar (kamera = fokus utama). Container dilebarkan
+   HANYA saat section translator aktif; landing/about tetap --maxw agar teks nyaman. */
+main:has(> #page-translator:not([hidden])) { max-width: 1600px; }
 
 .page { animation: fade-up .35s ease both; }
 .page[hidden] { display: none; }
@@ -317,20 +320,27 @@ main {
 /* ============================== TRANSLATOR GRID ============================== */
 .translator-grid {
   display: grid;
-  /* lebar 3/5/4: kamera tetap fokus utama, kiri & kanan tak sempit */
-  grid-template-columns: 3fr 5fr 4fr;
+  /* lebar 3/6/3.6: kamera dominan di layar lebar, kiri & kanan tetap terbaca */
+  grid-template-columns: 3fr 6fr 3.6fr;
   gap: var(--gutter);
   align-items: stretch;            /* tinggi 3 kolom seimbang (ikut yg tertinggi) */
 }
 .col-output { display: flex; flex-direction: column; gap: 1rem; }
+/* Kartu Riwayat menyerap sisa tinggi kolom kanan agar tak ada bidang kosong. */
+.col-output .card:has(.nlp-history) {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
 /* padding kartu area translator sedikit dirapatkan agar kolom kanan tak terlalu panjang */
 .translator-grid .card { padding: 1.1rem 1.25rem; }
 
 /* ---- Kamera (tengah) ---- */
 .camera-panel { display: flex; flex-direction: column; }
-/* kolom di-stretch: pusatkan video di ruang ekstra (aspect-ratio TETAP, tak meregang),
-   tombol kontrol menempel ke bawah. */
-.camera-panel .video-wrap { margin-block: auto; }
+/* kolom di-stretch: kotak video menyerap ruang ekstra (frame tetap utuh & ter-center
+   berkat object-fit: contain), tombol kontrol menempel ke bawah. */
+.camera-panel .video-wrap { flex: 1 1 auto; margin-block: 0; }
 .camera-panel .controls { margin-bottom: 0; }
 .cam-meta { display: flex; align-items: center; gap: .5rem; }
 .cam-status {
@@ -359,7 +369,9 @@ main {
 .video-wrap {
   position: relative;
   width: 100%;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 4 / 3;   /* tinggi dasar; flex-grow hanya menambah bila ada sisa ruang.
+                            JANGAN beri min-height: rasio akan mengubahnya jadi
+                            min-width dan membuat layar kecil scroll horizontal. */
   background: var(--inverse-surface);
   border-radius: var(--r-lg);
   overflow: hidden;
@@ -403,7 +415,9 @@ main {
 }
 
 /* ---- Riwayat NLP ---- */
-.nlp-history { list-style: none; display: flex; flex-direction: column; gap: .5rem; max-height: 220px; overflow-y: auto; }
+/* flex-basis 0: daftar ikut tinggi kartu (bukan tinggi konten) — memanjang saat ada
+   sisa ruang, tetap scroll saat riwayat menumpuk. */
+.nlp-history { list-style: none; display: flex; flex-direction: column; gap: .5rem; flex: 1 1 0; min-height: 180px; overflow-y: auto; }
 .nlp-history li.history-item {
   background: var(--surface-container);
   border: 1px solid var(--outline-variant);
@@ -602,6 +616,11 @@ footer {
 }
 
 /* ============================== RESPONSIVE ============================== */
+@media (max-width: 1280px) {
+  /* layar sedang: proporsi lama agar kolom kiri/kanan tidak sempit */
+  .translator-grid { grid-template-columns: 3fr 5fr 4fr; }
+}
+
 @media (max-width: 1024px) {
   .translator-grid { grid-template-columns: 1fr; }
   .col-camera { order: 1; }
@@ -609,7 +628,10 @@ footer {
   .col-speech { order: 3; }
   /* mode tumpuk: kolom = tinggi konten; batasi chat agar tak memanjangkan halaman */
   .speech-chat { flex: none; min-height: 9rem; max-height: 48vh; }
-  .camera-panel .video-wrap { margin-block: 0; }   /* tak perlu pusatkan saat 1 kolom */
+  /* mode 1 kolom: tinggi kartu = tinggi konten, tak ada sisa ruang untuk di-grow */
+  .camera-panel .video-wrap { flex: none; margin-block: 0; }
+  .col-output .card:has(.nlp-history) { flex: none; }
+  .nlp-history { flex: none; max-height: 40vh; }
   .hero { grid-template-columns: 1fr; }
   .hero-art { min-height: 260px; margin-top: 1rem; }
   .pipeline { grid-template-columns: repeat(2, 1fr); }
